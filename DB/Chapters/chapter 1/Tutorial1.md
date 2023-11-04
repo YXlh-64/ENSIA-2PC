@@ -1,7 +1,7 @@
 # Chapter One: Database Systems
 ## Chapter's Outline:
 * Define the difference between data and information
-* Describe what a database is, its different types and why is it important
+* Describe what a **database** is, its different types and why is it important
 * Explain the importance of database design 
 * See how databases evolved from file systems
 * Understand flaws in file system data management
