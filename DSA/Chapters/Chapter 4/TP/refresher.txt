@@ -1,0 +1,27 @@
+    The root node is A
+    The leaf nodes are: G, H, I, L, M, and K
+    The depth of the tree is 4 (the depth of the tree is the 
+depth of the deapest leaf node the maximum depth of the leaf nodes)
+    The output of:
+inorder:   GDHBIELJMACFK
+preorder:  ABDGHEIJLMCFK 
+postorder: GHDILMJEBKFCA
+    Computing the height, depth and listing the parent, child, and sibling nodes
+for A:
+    * the parent node: none
+    * the child nodes: B, C
+    * siblings: none
+    * height: 4
+    * depth: 0
+for E:
+    * the parent node: B
+    * the child nodes:  I, J
+    * the siblings: D
+    * height: 2
+    * depth: 2
+for F:
+    * the parent node: C
+    * the child nodes: K
+    * the siblings: none
+    * height: 1
+    * depth: 2
