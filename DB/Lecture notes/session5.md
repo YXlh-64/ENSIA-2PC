@@ -21,10 +21,11 @@
 * What happens if we set NOT Null: IT WILL go to the metadata where there is a constraint table, ...to be continued
 * If we don't provide a name for the constraint, the system will choose the name for the constraint, thus it would be very hard to manahe it later, as a solution you should use the syntax specified previously, that is:
   * constraint   primaryKey (ID) => giving a custom name to be able to exploit it later
-* Superkey is a composite key 
+* Superkey may be a composite key 
 * primary key is the minimum superkey (prilmayr key is the non reductable superkey)
 * we can find primary key as a composite key
 * difference between superkey and primary key: we can find a part of superkey as a primary key, superkey is larger (wider) than primary key
+* Superkeys are all the possible keys that can be formed from the table
 * A part of management rules have a direct effect on the model (conceptual model)
 * The other part of management rules will transform to constraints
 * why we add links? remember the lab1. How to add links in relational model: links are achieved through the use of data (common data over different relations)
