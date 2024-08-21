@@ -1,0 +1,20 @@
+//
+// Figure 6.8 Procedure to insert into a binary heap
+//
+/**
+* Insert item x, allowing duplicates.
+*/
+void insert( const Comparable & x )
+{
+	if( currentSize == array.size( ) - 1 )
+		array.resize( array.size( ) * 2 );
+
+		// Percolate up
+	int hole = ++currentSize;
+	Comparable copy = x;
+
+	array[ 0 ] = std::move( copy );
+	for( ; x < array[ hole / 2 ]; hole /= 2 )
+		array[ hole ] = std::move( array[ hole / 2 ] );
+	array[ hole ] = std::move( array[ 0 ] );
+}

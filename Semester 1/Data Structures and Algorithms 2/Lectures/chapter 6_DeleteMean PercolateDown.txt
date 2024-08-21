@@ -1,0 +1,34 @@
+/**
+    * Remove the minimum item.
+    * Throws UnderflowException if empty.
+*/
+
+void deleteMin( )
+{
+ 	if( isEmpty( ) )
+ 		throw UnderflowException{ };
+
+ 	array[ 1 ] = std::move( array[ currentSize-- ] );
+ 	percolateDown( 1 );
+}
+
+void percolateDown( int hole )
+{
+	int child;
+	Comparable tmp = std::move( array[ hole ] );
+
+	for( ; hole * 2 <= currentSize; hole = child )
+	{
+		child = hole * 2;
+
+		if( child <= currentSize && array[ child + 1 ] < array[ child ] )
+			++child;
+
+		if( array[ child ] < tmp )
+			array[ hole ] = std::move( array[ child ] );
+		else
+			break;
+	}
+	
+	array[ hole ] = std::move( tmp );
+}

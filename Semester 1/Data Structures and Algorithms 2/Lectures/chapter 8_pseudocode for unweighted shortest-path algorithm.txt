@@ -1,0 +1,30 @@
+// Figure 9.16 Pseudocode for unweighted shortest-path algorithm
+
+void Graph::unweighted( Vertex s )
+{
+	Queue<Vertex> q;
+
+	for each Vertex v 		// initialisations
+	{
+		v.dist = INFINITY;
+	}
+
+	s.dist = 0;
+	q.enqueue(s);
+
+	while( !q.isEmpty( ) )
+	{
+	    Vertex v = q.dequeue( );
+
+	    for each Vertex w adjacent to v
+		if( w.dist == INFINITY )
+		{
+		    w.dist = v.dist + 1;
+		    w.path = v;   // N.B.: tracing back through the pv variable, the actual path can be printed.
+		    q.enqueue(w); // Since enqueue is at the end of the queue, vertices with dist are processed
+                                  // before those with dist+1
+		}
+	}
+}
+
+	

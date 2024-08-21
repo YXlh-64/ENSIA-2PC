@@ -1,0 +1,147 @@
+//
+// Figure 5.6 Type declaration for separate chaining hash table
+//
+template <typename HashedObj>
+class HashTable
+{
+   public:
+	explicit HashTable( int size = 101 );   
+               // explicit  used to mark constructors to not implicitly convert types
+	bool contains( const HashedObj & x ) const;
+
+	void makeEmpty( );
+	bool insert( const HashedObj & x );
+	bool insert( HashedObj && x );
+	bool remove( const HashedObj & x );
+
+   private:
+	vector<list<HashedObj>> theLists;      // The array of Lists
+	int currentSize;
+
+	void rehash( );
+	size_t myhash( const HashedObj & x ) const;
+};
+
+// Function object template expressing hash functions 
+//
+template <typename Key>
+class hash
+{
+   public:
+	size_t operator() ( const Key & k ) const;
+};
+
+//
+// Default implementation of previous hash class template provided for standard type string
+//
+template <>
+class hash<string>
+{
+    public:
+	size_t operator()( const string & key )
+	{
+		size_t hashVal = 0;
+		for( char ch : key )
+			hashVal = 37 * hashVal + ch;
+		return hashVal;
+	}
+};
+
+//
+// Figure 5.7 myHash member function for hash tables
+//
+size_t myhash( const HashedObj & x ) const
+{
+	static hash<HashedObj> hf;
+	return hf( x ) % theLists.size( );
+}
+
+//
+//Figure 5.8 Example of a class that can be used as a HashedObj
+// Example of an Employee class
+//
+class Employee
+{
+   public:
+	const string & getName( ) const
+	   { return name; }
+	bool operator==( const Employee & rhs ) const
+	   { return getName( ) == rhs.getName( ); }
+ 	bool operator!=( const Employee & rhs ) const
+	   { return !( *this == rhs; }
+
+ // Additional public members not shown
+
+    private:
+ 	string name;
+ 	double salary;
+ 	int seniority;
+
+ // Additional private members not shown
+ };
+
+ template<>
+ class hash<Employee>
+ {
+    public:
+ 	size_t operator()( const Employee & item )
+ 	{
+ 		static hash<string> hf;
+ 		return hf( item.getName( ) );
+ 	}
+ };
+
+//
+// Figure 5.9 makeEmpty, contains, and remove routines for separate chaining hash table
+//
+void makeEmpty( )
+{
+	for( auto & thisList : theLists )   // recall: theLists is vector<list<HashedObj>>    
+                                            // The array of Lists
+		thisList.clear( );
+	// list::clear() is an inbuilt function in C++ STL which is declared in header file.
+        // it clears the whole list, i.e. removes all the elements present in the list container
+        // and leaves it with size 0.
+}
+
+bool contains( const HashedObj & x ) const
+{
+	auto & whichList = theLists[ myhash( x ) ];
+ 	return find( begin( whichList ), end( whichList ), x ) != end( whichList );
+ }
+
+ bool remove( const HashedObj & x )
+ {
+ 	auto & whichList = theLists[ myhash( x ) ];
+ 	auto itr = find( begin( whichList ), end( whichList ), x );
+
+ 	if( itr == end( whichList ) )
+ 		return false;
+
+ 	whichList.erase( itr );
+           // erase() can be used to remove a single element or a range of elements 
+           // from the specified list container
+ 	--currentSize;
+ 	return true;
+ }
+
+//
+//Figure 5.10 insert routine for separate chaining hash table
+//
+bool insert( const HashedObj & x )
+{
+	auto & whichList = theLists[ myhash( x ) ];
+	if( find( begin( whichList ), end( whichList ), x ) != end( whichList ) )
+		return false;
+	whichList.push_back( x );
+              // push_back() method is part of vector. Used to push elements into a vector from
+	      // the back. The new value is inserted into the vector at the end. 
+
+	// Rehash; see Section 5.5
+	if( ++currentSize > theLists.size( ) )
+ 		rehash( );
+                  // If the hash table size is exceeded, rehash is called to expand the table
+		  // and re-calculate the hash code of already stored entries 
+
+ 	return true;
+ }

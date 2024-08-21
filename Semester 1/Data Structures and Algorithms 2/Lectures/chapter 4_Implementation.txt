@@ -1,0 +1,267 @@
+// Binary search tree class skeleton
+//
+1 template <typename Comparable>
+2 class BinarySearchTree
+3 {
+4   public:
+5 	BinarySearchTree( );
+6 	BinarySearchTree( const BinarySearchTree & rhs );
+7 	BinarySearchTree( BinarySearchTree && rhs );
+8 	~BinarySearchTree( );
+9
+10 	const Comparable & findMin( ) const;
+11 	const Comparable & findMax( ) const;
+12 	bool contains( const Comparable & x ) const;
+13 	bool isEmpty( ) const;
+14 	void printTree( ostream & out = cout ) const;
+15
+16 	void makeEmpty( );
+17 	void insert( const Comparable & x );
+18 	void insert( Comparable && x );
+19 	void remove( const Comparable & x );
+20
+21 	BinarySearchTree & operator=( const BinarySearchTree & rhs );
+22 	BinarySearchTree & operator=( BinarySearchTree && rhs );
+23
+24  private:
+25 	struct BinaryNode
+26 	{
+27 		Comparable element;
+28 		BinaryNode *left;
+29 		BinaryNode *right;
+30
+31 		BinaryNode( const Comparable & theElement, BinaryNode *lt, BinaryNode *rt )
+32 		   : element{ theElement }, left{ lt }, right{ rt } { }
+33
+34 		BinaryNode( Comparable && theElement, BinaryNode *lt, BinaryNode *rt )
+35 		   : element{ std::move( theElement ) }, left{ lt }, right{ rt } { }
+36 	};
+37
+38	BinaryNode *root;
+39
+40 	void insert( const Comparable & x, BinaryNode * & t );
+41 	void insert( Comparable && x, BinaryNode * & t );
+42 	void remove( const Comparable & x, BinaryNode * & t );
+43 	BinaryNode * findMin( BinaryNode *t ) const;
+44 	BinaryNode * findMax( BinaryNode *t ) const;
+45 	bool contains( const Comparable & x, BinaryNode *t ) const;
+46 	void makeEmpty( BinaryNode * & t );
+47 	void printTree( BinaryNode *t, ostream & out ) const;
+48 	BinaryNode * clone( BinaryNode *t ) const;
+49 };
+
+//====================================================
+1 /** Figure 4.17 Illustration of public member functions calling private recursive member functions.
+2 * Method Contains to test if an item is in a subtree. Returns true if x is found in the tree.
+3 */
+4 bool contains( const Comparable & x ) const
+5 {
+6 	return contains( x, root );
+7 }
+8
+9 /**
+10 * Method to insert x into the tree; duplicates are ignored.
+11 */
+12 void insert( const Comparable & x )
+13 {
+14 	insert( x, root );
+15 }
+16
+17 /**
+18 * Method to remove x from the tree. Nothing is done if x is not found.
+19 */
+20 void remove( const Comparable & x )
+21 {
+22 	remove( x, root );
+23 }
+
+
+//====================================================
+1 /** Figure 4.18 
+2 * Internal method Contains to test if an item is in a subtree.
+3 * x is item to search for.
+4 * t is the node that roots the subtree.
+5 */
+6 bool contains( const Comparable & x, BinaryNode *t ) const
+7 {
+8 	if( t == nullptr )
+9 		return false;
+10 	else if( x < t->element )
+11 		return contains( x, t->left );
+12 	     else if( t->element < x )
+13 			return contains( x, t->right );
+14 		  else
+15 			return true; // Match
+16 }
+
+//=====================================================
+// Figure 4.19 Illustrates use of a function object to implement binary search tree
+1 template <typename Object, typename Comparator=less<Object>>
+2 class BinarySearchTree
+3 {
+4 public:
+5
+6 // Same methods, with Object replacing Comparable
+7
+8    private:
+9
+10 	BinaryNode *root;
+11 	Comparator isLessThan;  // boolean function that implements the comparison of objects
+12
+13 // Same methods, with Object replacing Comparable
+14
+15    /**
+16    * Internal method to test if an item is in a subtree.
+17    * x is item to search for.
+18    * t is the node that roots the subtree.
+19    */
+20    bool contains( const Object & x, BinaryNode *t ) const
+21    {
+22 	  if( t == nullptr )
+23 	      return false;
+24 	  else if( isLessThan( x, t->element ) )
+25 	           return contains( x, t->left );
+26 	       else if( isLessThan( t->element, x ) )
+27 	                return contains( x, t->right );
+28 		  else
+29 	      	        return true; // Match
+30     }
+31 };
+
+// ==============================================================
+// Figure 4.20 Recursive implementation of findMin for binary search trees
+1 /**
+2 * Internal method to find the smallest item in a subtree t.
+3 * Return node containing the smallest item.
+4 */
+
+
+//========================================================
+// Figure 4.21 Nonrecursive implementation of findMax for binary search trees
+1 /**
+2 * Internal method to find the largest item in a subtree t.
+3 * Return node containing the largest item.
+4 */
+5 BinaryNode * findMax( BinaryNode *t ) const
+6 {
+7 	if( t != nullptr )
+8 	      while( t->right != nullptr )
+9 		  t = t->right;
+10 	return t;
+11 }
+
+//==========================================================
+// Figure 4.23 Insertion into a binary search tree
+1 /**
+2 * Internal method to insert into a subtree.
+3 * x is the item to insert.
+4 * t is the node that roots the subtree.
+5 * Set the new root of the subtree.
+6 */
+7 void insert( const Comparable & x, BinaryNode * & t )
+8 {
+9 	if( t == nullptr )
+10 	    t = new BinaryNode{ x, nullptr, nullptr };
+11 	else if( x < t->element )
+12 	         insert( x, t->left );
+13 	     else if( t->element < x )
+14 		      insert( x, t->right );
+15 		  else
+16 			; // Duplicate; do nothing
+17 }
+18
+19 /**
+20 * Internal method to insert into a subtree.
+21 * x is the item to insert by moving.
+22 * t is the node that roots the subtree.
+23 * Set the new root of the subtree.
+24 */
+25 void insert( Comparable && x, BinaryNode * & t )
+26 {
+27 	if( t == nullptr )
+28 	    t = new BinaryNode{ std::move( x ), nullptr, nullptr };  
+                 // std::move is exactly equivalent to a static_cast to an rvalue reference type
+29 	else if( x < t->element )
+30 		 insert( std::move( x ), t->left );
+31 	     else if( t->element < x )
+32 		      insert( std::move( x ), t->right );
+33 		  else
+34 			; // Duplicate; do nothing
+35 }
+
+//===================================================
+// Figure 4.26 Deletion routine for binary search trees
+1 /**
+2 * Internal method to remove from a subtree.
+3 * x is the item to remove.
+4 * t is the node that roots the subtree.
+5 * Set the new root of the subtree.
+6 */
+7 void remove( const Comparable & x, BinaryNode * & t )
+8 {
+9 	if( t == nullptr )
+10	    return; // Item not found; do nothing
+11 	if( x < t->element )
+12 	    remove( x, t->left );
+13 	else if( t->element < x )
+14 		 remove( x, t->right );
+15 	     else if( t->left != nullptr && t->right != nullptr ) // Two children
+16 		  {
+17 		      t->element = findMin( t->right )->element;
+18	 	      remove( t->element, t->right );
+19 		  }
+20		  else
+21 		  {
+22 		      BinaryNode *oldNode = t;
+23 		      t = ( t->left != nullptr ) ? t->left : t->right;
+24 		      delete oldNode;
+25 		   }
+26 }
+
+//=========================================================
+// Figure 4.27 Destructor and recursive makeEmpty member function
+1 /**
+2 * Destructor for the tree
+3 */
+4 ~BinarySearchTree( )
+5 {
+6 	makeEmpty( );
+7 }
+8 /**
+9 * Internal method to make subtree empty.
+10 */
+11 void makeEmpty( BinaryNode * & t )
+12 {
+13 	if( t != nullptr )
+14 	{
+15 	    makeEmpty( t->left );
+16	    makeEmpty( t->right );
+17 	    delete t;			// Note the postorder traversal. Is it logical?
+18	}
+19 	t = nullptr;
+20 }
+
+//========================================================
+// Figure 4.28 Copy constructor and recursive clone member function
+1 /**
+2 * Copy constructor
+3 */
+4 BinarySearchTree( const BinarySearchTree & rhs ) : root{ nullptr }
+5 {
+6 	root = clone( rhs.root );
+7 }
+8
+9 /**
+10 * Internal method to clone a subtree.
+11 */
+12 BinaryNode * clone( BinaryNode *t ) const
+13 {
+14 	if( t == nullptr )
+15	    return nullptr;
+16 	else
+17 	    return new BinaryNode{ t->element, clone( t->left ), clone( t->right ) };
+18 }
+
+//=============================================================
+
+

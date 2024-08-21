@@ -1,0 +1,32 @@
+// Figure 9.7 Pseudocode to perform topological sort
+// It is assumed that 
+//     the graph is already read into an adjacency list, 
+//     the indegrees are computed and stored with the vertices, and 
+//     each vertex has a named data member, topNum, in which to place its topological numbering.
+
+void Graph::topsort( )
+{
+	Queue<Vertex> q;
+	int counter = 0;
+
+	q.makeEmpty( );
+
+	for each Vertex v
+		if( v.indegree == 0 )
+			q.enqueue( v );
+
+	while( !q.isEmpty( ) )
+	{
+		Vertex v = q.dequeue( );
+		v.topNum = ++counter; 		// Assign next number to this dequeued vertex
+
+		for each Vertex w adjacent to v   // A vertex v is removed, and all vertices adjacent to v 
+			if( --w.indegree == 0 )   // have their indegrees decremented.
+				q.enqueue( w );
+	}
+
+	if( counter != NUM_VERTICES )        // NUM_VERTICES is a constant # of vertices in the graph
+		throw CycleFoundException{ };
+}
+
+

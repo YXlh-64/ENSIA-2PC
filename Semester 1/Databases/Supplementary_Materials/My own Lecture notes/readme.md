@@ -1,0 +1,1 @@
+Pleae notice that those notes were taken during the lecture. i.e they are eitheer quoted from the instructor or reformulated to other formats, but in either ways I was making sure to keep the same meaning that the professor tries to deliver. Despite my careful commitment to deliver accurate and exact content, please make sure to check the validity of important facts :) 

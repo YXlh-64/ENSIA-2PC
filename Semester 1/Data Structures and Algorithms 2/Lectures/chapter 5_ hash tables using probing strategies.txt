@@ -1,0 +1,113 @@
+//
+// Figure 5.14 Class interface for hash tables using probing strategies, 
+// including the nested HashEntry class
+//
+
+template <typename HashedObj>
+class HashTable
+{
+  public:
+	explicit HashTable( int size = 101 );  // explicit avoids implicit type conversion by constructor
+
+	bool contains( const HashedObj & x ) const;
+
+	void makeEmpty( );
+ 	bool insert( const HashedObj & x );
+ 	bool insert( HashedObj && x );
+ 	bool remove( const HashedObj & x );
+
+ 	enum EntryType { ACTIVE, EMPTY, DELETED };
+
+  private:
+    	struct HashEntry
+    	{
+		HashedObj element;
+		EntryType info;
+
+   		HashEntry( const HashedObj & e = HashedObj{ }, EntryType i = EMPTY )
+ 	   	  : element{ e }, info{ i } { }
+ 		HashEntry( HashedObj && e, EntryType i = EMPTY )
+ 	     	  : element{ std::move( e ) }, info{ i } { }
+    	};
+
+ 	vector<HashEntry> array;
+ 	int currentSize;
+
+ 	bool isActive( int currentPos ) const;
+ 	int findPos( const HashedObj & x ) const;
+ 	void rehash( );
+ 	size_t myhash( const HashedObj & x ) const;
+};
+
+//
+// Figure 5.15 Routines to initialize quadratic probing hash table
+//
+	explicit HashTable( int size = 101 ) : array( nextPrime( size ) )
+	{ makeEmpty( ); }
+
+	void makeEmpty( )
+	{
+		currentSize = 0;
+		for( auto & entry : array )
+			entry.info = EMPTY;
+	}
+
+//
+// Figure 5.16 contains routine (and private helpers) for hashing with quadratic probing
+//
+	bool contains( const HashedObj & x ) const
+  	  { return isActive( findPos( x ) ); }
+
+	int findPos( const HashedObj & x ) const
+	{
+		int offset = 1;
+		int currentPos = myhash( x );
+
+		while( array[ currentPos ].info != EMPTY &&
+ 		       array[ currentPos ].element != x )
+ 		{
+ 			currentPos += offset; // Compute ith probe
+ 			offset += 2;
+                                    // represent the fast way of doing quadratic resolution. From the definition
+                                    // of the quadratic resolution function, f (i) = f (i − 1) + 2i − 1, 
+                                    // so the next cell to try is a distance from the previous cell tried 
+                                    // and this distance increases by 2 on successive probes
+ 			if( currentPos >= array.size( ) )
+ 				currentPos -= array.size( );     // This is faster than the obvious method
+ 		}
+
+ 		return currentPos;
+ 	}
+
+ 	bool isActive( int currentPos ) const
+ 	{ return array[ currentPos ].info == ACTIVE; }
+
+//
+// Figure 5.17 Some insert and remove routines for hash tables with quadratic probing
+//
+	bool insert( const HashedObj & x )
+	{
+		// Insert x as active
+		int currentPos = findPos( x );
+		if( isActive( currentPos ) )     //x already there
+			return false;
+
+		array[ currentPos ].element = x;
+		array[ currentPos ].info = ACTIVE;
+
+		// Rehash; see Section 5.5
+		if( ++currentSize > array.size( ) / 2 )
+			rehash( );
+
+		return true;
+	}
+
+	bool remove( const HashedObj & x )
+	{
+		int currentPos = findPos( x );
+		if( !isActive( currentPos ) )
+			return false;
+
+		array[ currentPos ].info = DELETED;
+		return true;
+	}
