@@ -5,7 +5,7 @@ Welcome to ENSIA's Second Year Preparatory Cycle Resources Repository! This repo
 
 ### 1.Clone the Repository:
 ```bash
-git clone https://github.com/YXlh-64/ENSIA-2PC/
+git clone https://github.com/YXlh-64/ENSIA-2PC.git
 ```
 
 ### 2.Navigate Through the Sections:
