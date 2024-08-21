@@ -1,5 +1,5 @@
 # ENSIA-2PC
-Welcome to the Second Year Preparatory Cycle Resources Repository! This repository is designed to provide all the necessary resources for the second year preparatory cycle which ENSIA students I have relied on to succeed in the courses I took throughout the second year of the preparatory cycle. The resources include both those shared by our instructors and those that I used/made. Whether you're a student looking for study materials, or an educator in need of our academic resources, this repository offers a comprehensive collection to support your academic journey.
+Welcome to ENSIA's Second Year Preparatory Cycle Resources Repository! This repository is designed to provide all the necessary resources for the second year preparatory cycle at ENSIA which I have relied on to succeed in the courses I took throughout the year. The resources include both those shared by our instructors and those that I have used/made. Whether you're a student looking for study materials, or an educator in need of our academic resources, this repository offers a comprehensive collection to support your academic journey.
 
 ## How to use this repository?
 
